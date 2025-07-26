@@ -1,20 +1,6 @@
 let songsUl = [];
 let currentFolder;
-async function getSong(folder) {
-    let songs = [];
-    let f = await fetch(`songs/${folder}`);
-    let response = await f.text();
-    let div = document.createElement("div");
-    div.innerHTML = response;
-    let a = div.getElementsByTagName("a");
-    let arr = Array.from(a);
-    for (const e of arr) {
-        if (e.href.endsWith(".mp3")) {
-            songs.push(decodeURIComponent(e.href.split("/").pop()));
-        }
-    }
-    return songs;
-}
+let currentAudio = null;
 
 function formatTime(seconds) {
     if (isNaN(seconds)) return "0:00";
@@ -22,8 +8,6 @@ function formatTime(seconds) {
     let secs = Math.floor(seconds % 60);
     return `${mins}:${secs.toString().padStart(2, '0')}`;
 }
-
-let currentAudio = null;
 
 function playSong(url) {
     if (currentAudio) {
@@ -42,75 +26,58 @@ function playSong(url) {
         document.querySelector(".circle").style.left = `${percent}%`;
     });
 }
-async function fetchFolders() {
-    let f = await fetch("songs/");
-    let text = await f.text();
 
-    let div = document.createElement("div");
-    div.innerHTML = text;
-
-    let links = Array.from(div.querySelectorAll("a"));
-
-    let folders = links
-        .map(a => a.getAttribute("href"))
-        .filter(href =>
-            href &&
-            !href.includes("..") &&
-            href.trim().endsWith("/")
-        )
-        .map(href => {
-            return href.replace(/\\/g, "/").replace("/songs/", "").replace(/\/$/, "");
-        });
-
-    console.log("Folders found:", folders);
-    return folders;
+async function getSong(folder) {
+    let response = await fetch(`songs/${folder}/info.json`);
+    let data = await response.json();
+    return data.mp3files || [];
 }
 
+async function fetchFolders() {
+    let f = await fetch("songs.json");
+    let folders = await f.json();
+
+    for (const folder of folders) {
+        document.querySelector(".cardcontainer").innerHTML += `
+        <div class="card" data-folder="${folder.folder}">
+            <img src="${folder.image}" alt="" />
+            <span>${folder.title}</span>
+            <p>${folder.desc}</p>
+        </div>`;
+    }
+
+    return folders.map(f => f.folder);
+}
 
 async function main() {
-    let folderName = await fetchFolders();
-    for (const e of folderName) {
-        let f = await fetch(`songs/${e}/info.json`);
-        let response = await f.json();
-        document.querySelector(".cardcontainer").innerHTML += `<div class="card" data-folder = ${e}>
-          <img src="songs/${e}/coverImg.jpeg" alt="" />
-          <span> ${response.title}</span>
-          <p>${response.desc}</p>
-        </div>` ;
-    }
-       document.querySelectorAll(".card").forEach(item => {
+    let folderList = await fetchFolders();
+
+    document.querySelectorAll(".card").forEach(item => {
         item.addEventListener("click", async () => {
-          let  folder =  item.dataset.folder;
-          console.log(folder)
-          currentFolder = folder;
-           songsUl = await getSong(folder);
-           console.log(songsUl);
+            let folder = item.dataset.folder;
+            currentFolder = folder;
+            songsUl = await getSong(folder);
+
             let songlist = document.querySelector(".songList ul");
             songlist.innerHTML = "";
 
-    for (const e of songsUl) {
-        songlist.innerHTML += `
-            <li>
-                <div class="songname">${e}</div>
-               
-                <div> Play Now <img src="play.svg" alt=""></div>
-            </li>`;
-    }
+            for (const e of songsUl) {
+                songlist.innerHTML += `
+                    <li>
+                        <div class="songname">${e}</div>
+                        <div> Play Now <img src="play.svg" alt=""></div>
+                    </li>`;
+            }
 
-    document.querySelectorAll(".songList ul li").forEach(item => {
-        item.addEventListener("click", () => {
-            let name = item.querySelector(".songname").innerHTML;
-            let encodedName = encodeURIComponent(name);
-            let url = `http://127.0.0.1:3000/songs/${folder}/${encodedName}`;
-            document.getElementById("play").src = "pause.svg";
-            playSong(url);
-        });
-    });
-
-
-
-    
-   
+            document.querySelectorAll(".songList ul li").forEach(item => {
+                item.addEventListener("click", () => {
+                    let name = item.querySelector(".songname").innerHTML;
+                    let encodedName = encodeURIComponent(name);
+                    let url = `songs/${folder}/${encodedName}`;
+                    document.getElementById("play").src = "pause.svg";
+                    playSong(url);
+                });
+            });
         });
     });
 
@@ -131,7 +98,7 @@ async function main() {
         let index = songsUl.indexOf(currentFile);
         if (index > 0) {
             let previousSong = songsUl[index - 1];
-            playSong(`http://127.0.0.1:3000/songs/${currentFolder}/${encodeURIComponent(previousSong)}`);
+            playSong(`songs/${currentFolder}/${encodeURIComponent(previousSong)}`);
             document.getElementById("play").src = "pause.svg";
         }
     });
@@ -143,16 +110,17 @@ async function main() {
         let index = songsUl.indexOf(currentFile);
         if (index < songsUl.length - 1) {
             let nextSong = songsUl[index + 1];
-            playSong(`http://127.0.0.1:3000/songs/${currentFolder}/${encodeURIComponent(nextSong)}`);
+            playSong(`songs/${currentFolder}/${encodeURIComponent(nextSong)}`);
             document.getElementById("play").src = "pause.svg";
         }
     });
 
+    // Seekbar
     const seekbar = document.querySelector(".seekbar");
     const circle = document.querySelector(".circle");
     let isDragging = false;
 
-    circle.addEventListener("mousedown", (e) => {
+    circle.addEventListener("mousedown", () => {
         isDragging = true;
         document.body.style.userSelect = "none";
     });
@@ -173,8 +141,6 @@ async function main() {
             document.body.style.userSelect = "";
         }
     });
-
-  
-
 }
+
 main();
