@@ -1,14 +1,16 @@
 [
   {
-    "folder": "badshaah",
-    "image": "songs/badshaah/coverImg.jpeg",
+    "folder": "Badshaah",
     "title": "Badshaah Hits",
-    "desc": "Best of Badshaah"
+    "desc": "Top party and hip-hop tracks",
+    "image": "songs/Badshaah/coverImg.jpeg",
+    "mp3files": ["Blessed.mp3", "Genda Phool.mp3", "Jugnu.mp3"]
   },
   {
-    "folder": "honey",
-    "image": "songs/honey/coverImg.jpeg",
+    "folder": "Honey",
     "title": "Yo Yo Honey Singh",
-    "desc": "All time hits"
+    "desc": "Throwback classics",
+    "image": "songs/Honey/coverImg.jpeg",
+    "mp3files": ["Love Dose.mp3", "Desi Kalakaar.mp3"]
   }
 ]
