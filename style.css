@@ -1,0 +1,254 @@
+* {
+    margin: 0;
+    padding: 0;
+    scrollbar-width: thin;
+    scrollbar-color: #555 #1e1e1e;
+
+
+}
+
+
+/* Scrollbar for Chrome, Edge, and Safari */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1e1e1e;
+    /* Dark background */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #555;
+    /* Thumb color */
+    border-radius: 10px;
+    border: 2px solid #1e1e1e;
+}
+
+:root {
+    --o: 0;
+}
+
+
+
+
+body {
+    background-color: #000000;
+    @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap');
+    font-family: 'Orbitron', sans-serif;
+    color: white;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 20px 4px 20px;
+
+}
+
+
+#signup {
+    background-color: #000000;
+    color: #a29595;
+    font-weight: 600;
+    padding: 10px;
+    border-radius: 21px;
+    border: none;
+    font-size: 13px;
+}
+
+#login {
+    font-weight: 600;
+    padding: 16px 28px;
+    border-radius: 21px;
+    margin: 0 7px;
+    font-size: 14px;
+    border: none;
+}
+
+.container {
+    display: flex;
+}
+
+.left {
+    background-color: #121212;
+    width: 25vw;
+    height: calc(100vh - 72px);
+    margin: 0 8px;
+    border-radius: 10px;
+}
+
+.right {
+    height: calc(100vh - 72px);
+    width: 75vw;
+    background-color: #121212;
+    margin-right: 8px;
+    border-radius: 10px;
+}
+
+.heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 17px;
+}
+
+.right>div {
+    padding: 25px;
+
+
+}
+
+.cardcontainer {
+    width: 71vw;
+    height: calc(100vh - 300px);
+    background-color: #202020;
+    display: flex;
+    gap: 22px;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    justify-content: start;
+
+}
+
+.card {
+    position: relative;
+    height: 250px;
+    width: 176px;
+
+}
+
+.greenbutton img {
+    position: absolute;
+    bottom: 50px;
+    right: 5px;
+
+
+
+
+}
+
+.card img {
+    width: 170px;
+    height: 170px;
+    border-radius: 87px;
+    object-fit: cover;
+}
+
+.hamburger {
+    opacity: 0;
+}
+
+.songList {
+    height: 66vh;
+    background-color: #1f1f1f;
+    margin-top: 42px;
+    overflow-y: auto;
+
+}
+
+.songList ul li {
+    border: 2px solid gray;
+    padding: 5px 10px;
+    margin: 5px 8px;
+    border-radius: 5px;
+    display: flex;
+
+    align-items: center;
+}
+
+.songname {
+
+    width: 214px;
+    padding: 0 3px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.songList ul li :nth-child(2) {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+}
+
+.footer {
+    margin: 10px;
+}
+
+.footer a {
+    color: white;
+    padding: 3px;
+    bottom: 25px;
+}
+
+.playbar {
+    width: 25vw;
+    height: 15px;
+    border-radius: 10px;
+    margin: 2px auto;
+    background: linear-gradient(to right, #ff00cc, #3333ff);
+    box-shadow: 0 0 10px #ff00cc;
+    padding: 5px 0 ;
+}
+
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+.infoseek{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.seekbar {
+    width: 15vw;
+    height: 3px;
+    background-color: white;
+    position: relative;
+    cursor: pointer;
+}
+
+.circle {
+    width: 13px;
+    height: 13px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    transform: translate(-50%, -50%);
+    transition: left 0.05s linear;
+}
+
+
+
+
+
+
+
+
+
+@media (max-width: 431px) {
+    body {}
+
+    .left {
+        translate: -120%;
+    }
+
+    .right {
+        translate: -25vw;
+    }
+
+    .nav {
+        display: none;
+    }
+
+    .hamburger {
+        opacity: 1;
+    }
+
+}
