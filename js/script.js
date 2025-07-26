@@ -2,7 +2,7 @@ let songsUl = [];
 let currentFolder;
 async function getSong(folder) {
     let songs = [];
-    let f = await fetch(`http://127.0.0.1:3000/songs/${folder}`);
+    let f = await fetch(`songs/${folder}`);
     let response = await f.text();
     let div = document.createElement("div");
     div.innerHTML = response;
@@ -43,7 +43,7 @@ function playSong(url) {
     });
 }
 async function fetchFolders() {
-    let f = await fetch("http://127.0.0.1:3000/songs/");
+    let f = await fetch("songs/");
     let text = await f.text();
 
     let div = document.createElement("div");
@@ -70,7 +70,7 @@ async function fetchFolders() {
 async function main() {
     let folderName = await fetchFolders();
     for (const e of folderName) {
-        let f = await fetch(`http://127.0.0.1:3000/songs/${e}/info.json`);
+        let f = await fetch(`songs/${e}/info.json`);
         let response = await f.json();
         document.querySelector(".cardcontainer").innerHTML += `<div class="card" data-folder = ${e}>
           <img src="songs/${e}/coverImg.jpeg" alt="" />
