@@ -1,20 +1,11 @@
 let songsUl = [];
 let currentFolder;
 async function getSong(folder) {
-    let songs = [];
-    let f = await fetch(`songs/index.json`);
-    let response = await f.json();
-    let div = document.createElement("div");
-    div.innerHTML = response;
-    let a = div.getElementsByTagName("a");
-    let arr = Array.from(a);
-    for (const e of arr) {
-        if (e.href.endsWith(".mp3")) {
-            songs.push(decodeURIComponent(e.href.split("/").pop()));
-        }
-    }
+    let f = await fetch(`songs/${folder}/songs.json`);
+    let songs = await f.json();
     return songs;
 }
+
 
 function formatTime(seconds) {
     if (isNaN(seconds)) return "0:00";
@@ -66,7 +57,7 @@ async function main() {
           let  folder =  item.dataset.folder;
           console.log(folder)
           currentFolder = folder;
-           songsUl = await getSong(folder);
+           songsUl = await getSong();
            console.log(songsUl);
             let songlist = document.querySelector(".songList ul");
             songlist.innerHTML = "";
