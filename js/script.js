@@ -54,7 +54,7 @@ async function main() {
     }
        document.querySelectorAll(".card").forEach(item => {
         item.addEventListener("click", async () => {
-          let  folder =  item.dataset.folder;
+       let folder = item.getAttribute("data-folder");   
           console.log(folder)
           currentFolder = folder;
            songsUl = await getSong(folder);
