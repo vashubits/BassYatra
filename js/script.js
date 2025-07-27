@@ -2,7 +2,7 @@ let songsUl = [];
 let currentFolder;
 async function getSong(folder) {
     let songs = [];
-    let f = await fetch(`http://127.0.0.1:3000/songs/${folder}`);
+    let f = await fetch(`songs/${folder}`);
     let response = await f.text();
     let div = document.createElement("div");
     div.innerHTML = response;
@@ -43,7 +43,7 @@ function playSong(url) {
     });
 }
 async function fetchFolders() {
-    let f = await fetch("songs/");
+    let f = await fetch("songs/index.json");
     let text = await f.text();
 
     let div = document.createElement("div");
@@ -101,7 +101,7 @@ async function main() {
         item.addEventListener("click", () => {
             let name = item.querySelector(".songname").innerHTML;
             let encodedName = encodeURIComponent(name);
-            let url = `http://127.0.0.1:3000/songs/${folder}/${encodedName}`;
+            let url = `songs/${folder}/${encodedName}`;
             document.getElementById("play").src = "pause.svg";
             playSong(url);
         });
@@ -131,7 +131,7 @@ async function main() {
         let index = songsUl.indexOf(currentFile);
         if (index > 0) {
             let previousSong = songsUl[index - 1];
-            playSong(`http://127.0.0.1:3000/songs/${currentFolder}/${encodeURIComponent(previousSong)}`);
+            playSong(`songs/${currentFolder}/${encodeURIComponent(previousSong)}`);
             document.getElementById("play").src = "pause.svg";
         }
     });
@@ -143,7 +143,7 @@ async function main() {
         let index = songsUl.indexOf(currentFile);
         if (index < songsUl.length - 1) {
             let nextSong = songsUl[index + 1];
-            playSong(`http://127.0.0.1:3000/songs/${currentFolder}/${encodeURIComponent(nextSong)}`);
+            playSong(`songs/${currentFolder}/${encodeURIComponent(nextSong)}`);
             document.getElementById("play").src = "pause.svg";
         }
     });
