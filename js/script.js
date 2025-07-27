@@ -2,8 +2,8 @@ let songsUl = [];
 let currentFolder;
 async function getSong(folder) {
     let songs = [];
-    let f = await fetch(`songs/${folder}`);
-    let response = await f.text();
+    let f = await fetch(`songs/index.json`);
+    let response = await f.json();
     let div = document.createElement("div");
     div.innerHTML = response;
     let a = div.getElementsByTagName("a");
