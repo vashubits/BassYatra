@@ -46,18 +46,20 @@ async function main() {
     for (const e of folderName) {
         let f = await fetch(`songs/${e}/info.json`);
         let response = await f.json();
-        document.querySelector(".cardcontainer").innerHTML += `<div class="card" data-folder ="${e}">
-         <img src="songs/${e}/${response.image}" alt="" />
-          <span> ${response.title}</span>
-          <p>${response.desc}</p>
-        </div>` ;
+       document.querySelector(".cardcontainer").innerHTML += `
+  <div class="card" data-folder="${e}">
+    <img src="songs/${e}/${response.image}" alt="${response.title}" />
+    <span>${response.title}</span>
+    <p>${response.desc}</p>
+  </div>`;
     }
-       document.querySelectorAll(".card").forEach(item => {
-        item.addEventListener("click", async () => {
-       let folder = item.getAttribute("data-folder");   
-          console.log(folder)
-          currentFolder = folder;
-           songsUl = await getSong(folder);
+      document.querySelectorAll(".card").forEach(item => {
+    item.addEventListener("click", async () => {
+        let folder = item.getAttribute("data-folder");   
+        console.log(folder);
+        currentFolder = folder;
+        songsUl = await getSong(folder);
+        console.log(songsUl);
            console.log(songsUl);
             let songlist = document.querySelector(".songList ul");
             songlist.innerHTML = "";
