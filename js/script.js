@@ -56,7 +56,7 @@ async function main() {
         let f = await fetch(`songs/${e}/info.json`);
         let response = await f.json();
         document.querySelector(".cardcontainer").innerHTML += `<div class="card" data-folder = ${e}>
-          <img src="songs/${e}/coverImg.jpeg" alt="" />
+         <img src="songs/${e}/${response.image}" alt="" />
           <span> ${response.title}</span>
           <p>${response.desc}</p>
         </div>` ;
