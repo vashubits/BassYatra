@@ -57,7 +57,7 @@ async function main() {
           let  folder =  item.dataset.folder;
           console.log(folder)
           currentFolder = folder;
-           songsUl = await getSong();
+           songsUl = await getSong(folder);
            console.log(songsUl);
             let songlist = document.querySelector(".songList ul");
             songlist.innerHTML = "";
