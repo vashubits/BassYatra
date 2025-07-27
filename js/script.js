@@ -1,11 +1,20 @@
 let songsUl = [];
 let currentFolder;
 async function getSong(folder) {
-    let f = await fetch(`songs/${folder}/songs.json`);
-    let songs = await f.json();
+    let songs = [];
+    let f = await fetch(`http://127.0.0.1:3000/songs/${folder}`);
+    let response = await f.text();
+    let div = document.createElement("div");
+    div.innerHTML = response;
+    let a = div.getElementsByTagName("a");
+    let arr = Array.from(a);
+    for (const e of arr) {
+        if (e.href.endsWith(".mp3")) {
+            songs.push(decodeURIComponent(e.href.split("/").pop()));
+        }
+    }
     return songs;
 }
-
 
 function formatTime(seconds) {
     if (isNaN(seconds)) return "0:00";
@@ -34,8 +43,25 @@ function playSong(url) {
     });
 }
 async function fetchFolders() {
-    let f = await fetch("songs/index.json");
-    let folders = await f.json();  // ✅ Parse JSON directly
+    let f = await fetch("http://127.0.0.1:3000/songs/");
+    let text = await f.text();
+
+    let div = document.createElement("div");
+    div.innerHTML = text;
+
+    let links = Array.from(div.querySelectorAll("a"));
+
+    let folders = links
+        .map(a => a.getAttribute("href"))
+        .filter(href =>
+            href &&
+            !href.includes("..") &&
+            href.trim().endsWith("/")
+        )
+        .map(href => {
+            return href.replace(/\\/g, "/").replace("/songs/", "").replace(/\/$/, "");
+        });
+
     console.log("Folders found:", folders);
     return folders;
 }
@@ -44,22 +70,20 @@ async function fetchFolders() {
 async function main() {
     let folderName = await fetchFolders();
     for (const e of folderName) {
-        let f = await fetch(`songs/${e}/info.json`);
+        let f = await fetch(`http://127.0.0.1:3000/songs/${e}/info.json`);
         let response = await f.json();
-       document.querySelector(".cardcontainer").innerHTML += `
-  <div class="card" data-folder="${e}">
-    <img src="songs/${e}/${response.image}" alt="${response.title}" />
-    <span>${response.title}</span>
-    <p>${response.desc}</p>
-  </div>`;
+        document.querySelector(".cardcontainer").innerHTML += `<div class="card" data-folder = ${e}>
+          <img src="songs/${e}/coverImg.jpeg" alt="" />
+          <span> ${response.title}</span>
+          <p>${response.desc}</p>
+        </div>` ;
     }
-      document.querySelectorAll(".card").forEach(item => {
-    item.addEventListener("click", async () => {
-        let folder = item.getAttribute("data-folder");   
-        console.log(folder);
-        currentFolder = folder;
-        songsUl = await getSong(folder);
-        console.log(songsUl);
+       document.querySelectorAll(".card").forEach(item => {
+        item.addEventListener("click", async () => {
+          let  folder =  item.dataset.folder;
+          console.log(folder)
+          currentFolder = folder;
+           songsUl = await getSong(folder);
            console.log(songsUl);
             let songlist = document.querySelector(".songList ul");
             songlist.innerHTML = "";
@@ -77,7 +101,7 @@ async function main() {
         item.addEventListener("click", () => {
             let name = item.querySelector(".songname").innerHTML;
             let encodedName = encodeURIComponent(name);
-            let url = `songs/${folder}/${encodedName}`;
+            let url = `http://127.0.0.1:3000/songs/${folder}/${encodedName}`;
             document.getElementById("play").src = "pause.svg";
             playSong(url);
         });
@@ -107,7 +131,7 @@ async function main() {
         let index = songsUl.indexOf(currentFile);
         if (index > 0) {
             let previousSong = songsUl[index - 1];
-            playSong(`songs/${currentFolder}/${encodeURIComponent(previousSong)}`);
+            playSong(`http://127.0.0.1:3000/songs/${currentFolder}/${encodeURIComponent(previousSong)}`);
             document.getElementById("play").src = "pause.svg";
         }
     });
@@ -119,7 +143,7 @@ async function main() {
         let index = songsUl.indexOf(currentFile);
         if (index < songsUl.length - 1) {
             let nextSong = songsUl[index + 1];
-            playSong(`songs/${currentFolder}/${encodeURIComponent(nextSong)}`);
+            playSong(`http://127.0.0.1:3000/songs/${currentFolder}/${encodeURIComponent(nextSong)}`);
             document.getElementById("play").src = "pause.svg";
         }
     });
