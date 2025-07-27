@@ -44,24 +44,7 @@ function playSong(url) {
 }
 async function fetchFolders() {
     let f = await fetch("songs/index.json");
-    let text = await f.text();
-
-    let div = document.createElement("div");
-    div.innerHTML = text;
-
-    let links = Array.from(div.querySelectorAll("a"));
-
-    let folders = links
-        .map(a => a.getAttribute("href"))
-        .filter(href =>
-            href &&
-            !href.includes("..") &&
-            href.trim().endsWith("/")
-        )
-        .map(href => {
-            return href.replace(/\\/g, "/").replace("/songs/", "").replace(/\/$/, "");
-        });
-
+    let folders = await f.json();  // ✅ Parse JSON directly
     console.log("Folders found:", folders);
     return folders;
 }
